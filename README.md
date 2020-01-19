@@ -1,2 +1,3 @@
-# DotNetCoreMetricsInfrastructure
-Metrics as a part of an insfrastucture for .net core
+# Metrics as a part of an insfrastucture for .net core
+
+For .net core 2.1 see [https://github.com/ABaboshin/DotNetCoreMetricsInfrastructure/tree/core-2.1](https://github.com/ABaboshin/DotNetCoreMetricsInfrastructure/tree/core-2.1)
