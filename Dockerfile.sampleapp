@@ -1,0 +1,18 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:2.1.803 as build
+
+COPY . .
+
+RUN mkdir /nuget
+RUN dotnet build -c Release --configfile nuget.config src/Metrics.Extensions.MassTransit/Metrics.Extensions.MassTransit.csproj
+RUN dotnet pack -c Release -o /nuget src/Metrics.Extensions.MassTransit/Metrics.Extensions.MassTransit.csproj
+
+RUN dotnet publish -c Release -o /app sample/SampleApp/SampleApp.csproj
+
+FROM baseimage:2.1
+COPY --from=build /app /app
+
+EXPOSE 80
+
+WORKDIR /app
+
+ENTRYPOINT ["dotnet", "SampleApp.dll"]

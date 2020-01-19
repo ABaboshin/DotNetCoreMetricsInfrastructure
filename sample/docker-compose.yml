@@ -1,0 +1,43 @@
+version: '3.3'
+
+services:
+  statsd:
+    image: prom/statsd-exporter:v0.12.2
+    ports:
+      - "9102:9102"
+      - "9125:9125/udp"
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "passwoyourStrong(!)Passwordrd"
+    ports:
+      - "1433:1433"
+  rabbitmq:
+    image: rabbitmq:3.8.1-management
+    environment:
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "password"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+  sampleapp:
+    image: sampleapp:2.1
+    environment:
+      ASPNETCORE_URLS: "http://*:5000"
+      ASPNETCORE_ENVIRONMENT: Development
+      STATSD__PORT: "9125"
+      STATSD__SERVER: "statsd"
+      entityframeworkcore_metrics__enabled: "true"
+      entityframeworkcore_metrics__name: "sampleef"
+      http_metrics__enabled: "true"
+      http_metrics__name: "samplehttp"
+      masstransit_metrics__enabled: "true"
+      masstransit_metrics__name: "samplemasstransit"
+      DATABASE__CONNECTIONSTRING: "Server=sqlserver;Database=mydb;User Id=sa;Password=passwoyourStrong(!)Passwordrd;"
+      RABBITMQ__HOST: "rabbitmq"
+      RABBITMQ__USER: "admin"
+      RABBITMQ__PASSWORD: "password"
+    ports:
+      - "5000:5000"
+

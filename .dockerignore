@@ -1,0 +1,10 @@
+**
+!src/**
+!sample**
+!nuget.config
+src/**/bin
+src/**/obj
+src/**/.vs
+sample/**/bin
+sample/**/obj
+sample/**/.vs

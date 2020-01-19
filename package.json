@@ -1,0 +1,16 @@
+{
+  "name": "InjectableMetrics",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "Andrey Baboshin",
+  "scripts": {
+    "buildMetrics.Extensions.MassTransit": "dotnet build -c Release --configfile nuget.config src/Metrics.Extensions.MassTransit/Metrics.Extensions.MassTransit.csproj",
+    "nugetMetrics.Extensions.MassTransit": "yarn buildMetrics.Extensions.MassTransit && dotnet pack -c Release -o nuget src/Metrics.Extensions.MassTransit/Metrics.Extensions.MassTransit.csproj",
+    "buildMetrics": "dotnet build -c Release --configfile nuget.config -o nuget src/Metrics/Metrics.csproj",
+    "nugetMetrics": "yarn buildMetrics && dotnet pack -c Release src/Metrics/Metrics.csproj",
+    "nuget": "yarn nugetMetrics.Extensions.MassTransit && yarn nugetMetrics",
+    "baseimage": "docker build --no-cache -t baseimage:2.1 -f Dockerfile.baseimage .",
+    "sampleappimage": "docker build --no-cache -t sampleapp:2.1 -f Dockerfile.sampleapp .",
+    "images": "yarn baseimage && yarn sampleappimage"
+  }
+}
