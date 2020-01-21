@@ -1,4 +1,5 @@
 ﻿using Metrics.Configuration;
+using Metrics.CustomTracking;
 using Metrics.EntityFrameworkCore;
 using Metrics.HealthChecks;
 using Metrics.Http;
@@ -15,6 +16,7 @@ namespace Metrics
     ///     - entity framework core queries
     ///     - masstransit message consuming
     ///     - healthchecks
+    ///     - custom tracking
     /// </summary>
     internal class DiagnosticsObserver : IObserver<DiagnosticListener>
     {
@@ -22,6 +24,7 @@ namespace Metrics
         private readonly MassTransitConfiguration _massTransitConfiguration;
         private readonly EntityFrameworkCoreConfiguration _entityFrameworkCoreConfiguration;
         private readonly HealthChecksConfiguration _healthChecksConfiguration;
+        private readonly CustomTrackingConfiguration _customTrackingConfiguration;
         private readonly ServiceConfiguration _serviceConfiguration;
 
         public DiagnosticsObserver(
@@ -30,6 +33,7 @@ namespace Metrics
             MassTransitConfiguration massTransitConfiguration,
             EntityFrameworkCoreConfiguration entityFrameworkCoreConfiguration,
             HealthChecksConfiguration healthChecksConfiguration,
+            CustomTrackingConfiguration customTrackingConfiguration,
             ServiceConfiguration serviceConfiguration)
         {
             ConfigureStatsd(statsdConfiguration);
@@ -38,6 +42,7 @@ namespace Metrics
             _massTransitConfiguration = massTransitConfiguration;
             _entityFrameworkCoreConfiguration = entityFrameworkCoreConfiguration;
             _healthChecksConfiguration = healthChecksConfiguration;
+            _customTrackingConfiguration = customTrackingConfiguration;
             _serviceConfiguration = serviceConfiguration;
         }
 
@@ -78,6 +83,11 @@ namespace Metrics
             if (value.Name == "HealthChecks" && _healthChecksConfiguration.Enabled)
             {
                 value.Subscribe(new HealthChecksObserver(_healthChecksConfiguration, _serviceConfiguration));
+            }
+
+            if (value.Name == "CustomTracking" && _customTrackingConfiguration.Enabled)
+            {
+                value.Subscribe(new CustomTrackingObserver(_customTrackingConfiguration, _serviceConfiguration));
             }
         }
     }

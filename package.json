@@ -6,11 +6,14 @@
   "scripts": {
     "buildMetrics.Extensions.MassTransit": "dotnet build -c Release --configfile nuget.config src/Metrics.Extensions.MassTransit/Metrics.Extensions.MassTransit.csproj",
     "nugetMetrics.Extensions.MassTransit": "yarn buildMetrics.Extensions.MassTransit && dotnet pack -c Release -o nuget src/Metrics.Extensions.MassTransit/Metrics.Extensions.MassTransit.csproj",
+    "buildMetrics.Extensions.Tracking": "dotnet build -c Release --configfile nuget.config src/Metrics.Extensions.Tracking/Metrics.Extensions.Tracking.csproj",
+    "nugetMetrics.Extensions.Tracking": "yarn buildMetrics.Extensions.Tracking && dotnet pack -c Release -o nuget src/Metrics.Extensions.Tracking/Metrics.Extensions.Tracking.csproj",
     "buildMetrics": "dotnet build -c Release --configfile nuget.config -o nuget src/Metrics/Metrics.csproj",
     "nugetMetrics": "yarn buildMetrics && dotnet pack -c Release src/Metrics/Metrics.csproj",
-    "nuget": "yarn nugetMetrics.Extensions.MassTransit && yarn nugetMetrics",
+    "nuget": "yarn nugetMetrics.Extensions.MassTransit && yarn nugetMetrics && yarn nugetMetrics.Extensions.Tracking",
     "baseimage": "docker build --no-cache -t baseimage:2.1 -f Dockerfile.baseimage .",
     "sampleappimage": "docker build --no-cache -t sampleapp:2.1 -f Dockerfile.sampleapp .",
+    "prometheus": "docker build --no-cache -t prometheus:local -f prometheus/Dockerfile prometheus",
     "images": "yarn baseimage && yarn sampleappimage"
   }
 }

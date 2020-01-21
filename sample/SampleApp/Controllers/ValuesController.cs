@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using MassTransit;
+using Metrics.Extensions.Tracking;
 using Microsoft.AspNetCore.Mvc;
 using SampleApp.Database;
 using SampleApp.Database.Entities;
@@ -20,12 +21,15 @@ namespace SampleApp.Controllers
     {
         private readonly IBusControl _busControl;
         private readonly MyDbContext _myDbContext;
+        private readonly ICustomTracker _customTracker;
 
-        public ValuesController(IBusControl busControl, MyDbContext myDbContext)
+        public ValuesController(IBusControl busControl, MyDbContext myDbContext, ICustomTracker customTracker)
         {
             _busControl = busControl;
             _myDbContext = myDbContext;
+            _customTracker = customTracker;
         }
+
 
         /// <summary>
         /// executes an 'ok' sql query
@@ -90,6 +94,47 @@ namespace SampleApp.Controllers
                 {"dep1", true },
                 {"dep2", false }
             });
+            return Ok();
+        }
+
+        /// <summary>
+        /// track successfull execution
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("trackok")]
+        public async Task<ActionResult<string>> TrackOk()
+        {
+            _customTracker.ActivityName = "SampleActivity";
+            _customTracker.TraceIdentifier = HttpContext.TraceIdentifier;
+            _customTracker.Start();
+            await Task.Delay(1000);
+
+            _customTracker.Finish();
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// track successfull execution
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("trackexception")]
+        public async Task<ActionResult<string>> TrackException()
+        {
+            _customTracker.ActivityName = "SampleActivity";
+            _customTracker.TraceIdentifier = HttpContext.TraceIdentifier;
+            _customTracker.Start();
+            await Task.Delay(1000);
+
+            try
+            {
+                throw new NotImplementedByDesignException();
+            }
+            catch (Exception exception)
+            {
+                _customTracker.Finish(exception);
+            }
+
             return Ok();
         }
     }

@@ -16,6 +16,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Metrics.Extensions.MassTransit" Version="1.0.0" />
+    <PackageReference Include="Metrics.Extensions.Tracking" Version="1.0.0" />
   </ItemGroup>
 
 

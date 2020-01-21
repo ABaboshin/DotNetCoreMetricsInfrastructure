@@ -1,7 +1,6 @@
 ﻿using Metrics.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Diagnostics;
 
 [assembly: HostingStartup(typeof(Metrics.MetricsInjector))]
@@ -23,6 +22,7 @@ namespace Metrics
             var massTransitConfiguration = configuration.GetSection(MassTransitConfiguration.SectionKey).Get<MassTransitConfiguration>();
             var entityFrameworkCoreConfiguration = configuration.GetSection(EntityFrameworkCoreConfiguration.SectionKey).Get<EntityFrameworkCoreConfiguration>();
             var healthChecksConfiguration = configuration.GetSection(HealthChecksConfiguration.SectionKey).Get<HealthChecksConfiguration>();
+            var customTrackingConfiguration = configuration.GetSection(CustomTrackingConfiguration.SectionKey).Get<CustomTrackingConfiguration>();
             var serviceConfiguration = configuration.GetSection(ServiceConfiguration.SectionKey).Get<ServiceConfiguration>();
 
             DiagnosticListener.AllListeners.Subscribe(
@@ -32,6 +32,7 @@ namespace Metrics
                     massTransitConfiguration,
                     entityFrameworkCoreConfiguration,
                     healthChecksConfiguration,
+                    customTrackingConfiguration,
                     serviceConfiguration));
         }
     }

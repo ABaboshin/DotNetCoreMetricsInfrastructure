@@ -48,7 +48,8 @@ namespace Metrics.EntityFrameworkCore
                         duration,
                         tags: new[] {
                             $"commandText:{commandExecutedEventData.Command.CommandText.EscapeTagValue()}",
-                            $"service:{_serviceConfiguration.Name}"
+                            $"service:{_serviceConfiguration.Name}",
+                            $"success:True"
                         });
                 }
             }
@@ -61,7 +62,8 @@ namespace Metrics.EntityFrameworkCore
                     var duration = commandErrorEventData.Duration.TotalMilliseconds;
                     var tags = new List<string> {
                         $"commandText:{commandErrorEventData.Command.CommandText.EscapeTagValue()}",
-                        $"service:{_serviceConfiguration.Name}"
+                        $"service:{_serviceConfiguration.Name}",
+                        $"success:False"
                     };
                     tags.AddRange(commandErrorEventData.Exception.GetTags());
                     StatsdClient.DogStatsd.Histogram(_entityFrameworkCoreConfiguration.Name,
