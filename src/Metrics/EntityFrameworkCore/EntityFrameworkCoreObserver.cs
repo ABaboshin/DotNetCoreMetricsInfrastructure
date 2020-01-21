@@ -14,10 +14,12 @@ namespace Metrics.EntityFrameworkCore
     {
         private readonly ConcurrentDictionary<Guid, CommandInfo> info = new ConcurrentDictionary<Guid, CommandInfo>();
         private readonly EntityFrameworkCoreConfiguration _entityFrameworkCoreConfiguration;
+        private readonly ServiceConfiguration _serviceConfiguration;
 
-        public EntityFrameworkCoreObserver(EntityFrameworkCoreConfiguration entityFrameworkCoreConfiguration)
+        public EntityFrameworkCoreObserver(EntityFrameworkCoreConfiguration entityFrameworkCoreConfiguration, ServiceConfiguration serviceConfiguration)
         {
             _entityFrameworkCoreConfiguration = entityFrameworkCoreConfiguration;
+            _serviceConfiguration = serviceConfiguration;
         }
 
         public void OnCompleted()
@@ -46,6 +48,7 @@ namespace Metrics.EntityFrameworkCore
                         duration,
                         tags: new[] {
                             $"commandText:{commandExecutedEventData.Command.CommandText.EscapeTagValue()}",
+                            $"service:{_serviceConfiguration.Name}"
                         });
                 }
             }
@@ -57,7 +60,8 @@ namespace Metrics.EntityFrameworkCore
                 {
                     var duration = commandErrorEventData.Duration.TotalMilliseconds;
                     var tags = new List<string> {
-                        $"commandText:{commandErrorEventData.Command.CommandText.EscapeTagValue()}"
+                        $"commandText:{commandErrorEventData.Command.CommandText.EscapeTagValue()}",
+                        $"service:{_serviceConfiguration.Name}"
                     };
                     tags.AddRange(commandErrorEventData.Exception.GetTags());
                     StatsdClient.DogStatsd.Histogram(_entityFrameworkCoreConfiguration.Name,

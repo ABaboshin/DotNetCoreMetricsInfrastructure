@@ -1,14 +1,14 @@
 ﻿namespace Metrics.Configuration
 {
     /// <summary>
-    /// Configuration for http requests tracking
+    /// Configuration for healthchecks tracking
     /// </summary>
-    internal class MassTransitConfiguration
+    internal class HealthChecksConfiguration
     {
         /// <summary>
         /// Section name in configuration
         /// </summary>
-        public static readonly string SectionKey = "masstransit_metrics";
+        public static readonly string SectionKey = "healthcheck_metrics";
 
         /// <summary>
         /// enable tracking
@@ -18,6 +18,6 @@
         /// <summary>
         /// metric name
         /// </summary>
-        public string Name { get; set; } = "masstransit";
+        public string Name { get; set; } = "healthcheck";
     }
 }
