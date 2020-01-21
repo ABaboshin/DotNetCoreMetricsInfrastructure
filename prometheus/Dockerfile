@@ -15,9 +15,8 @@ RUN set -xe \
   && echo -e "[local]\nlocalhost ansible_connection=local" > \
   /etc/ansible/hosts
 
-ENV PROMETHEUS_VERSION 2.13.1
+ENV PROMETHEUS_VERSION 2.15.2
 ENV PROMETHEUS_URL https://github.com/prometheus/prometheus/releases/download/v$PROMETHEUS_VERSION/prometheus-$PROMETHEUS_VERSION.linux-amd64.tar.gz
-RUN echo $PROMETHEUS_URL
 RUN wget -O /tmp/prometheus.tar.gz -q $PROMETHEUS_URL
 RUN tar -C /tmp -xzf /tmp/prometheus.tar.gz
 RUN cp /tmp/prometheus-$PROMETHEUS_VERSION.linux-amd64/prometheus "/bin/prometheus"
