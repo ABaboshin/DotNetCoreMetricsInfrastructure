@@ -21,10 +21,13 @@ STATSD__PORT: "9125" # statsd port
 STATSD__SERVER: "statsd" # statsd server
 entityframeworkcore_metrics__enabled: "true" # enable entityframework core metrics
 entityframeworkcore_metrics__name: "sampleef" # entityframework core metric name
+healthcheck_metrics__enabled: "true" # enable healthchecks metrics
+healthcheck_metrics__name: "samplehc" # healthchecks metrics name
 http_metrics__enabled: "true" # enable http request metrics
 http_metrics__name: "samplehttp" # http request metric name
 masstransit_metrics__enabled: "true" # enable masstransit metrics
 masstransit_metrics__name: "samplemasstransit" # masstransit metric name
+service__name: ""sampleapp" # service name to include into metrics
 ```
 
 ### Extensions for MassTransit
@@ -68,6 +71,10 @@ It will create an app running on `http://localhost:5000` with the following endp
  - api/values/bad -> produces one http metrics with success and one entity framework core metric with an error
  - api/values/publish -> produces one http metrics with success and one masstransit metric with an error
  - api/values/exception -> produces one http metrics with an error
+ - api/values/hc -> produces sample healthcheck metrics*
+
+As long as `Microsoft.Extensions.Diagnostics.HealthChecks` are available for .net core 2.2+
+the healthcheck mocked here for the demonstration purposes.
 
 The metrics can be seen in statsd at `http://localhost:9102/metrics`.
 
@@ -75,4 +82,3 @@ The metrics can be seen in statsd at `http://localhost:9102/metrics`.
 
  - Create prometheus alers
  - Create grafana dashboards
- - Add healthcheck metrics

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using MassTransit;
@@ -74,6 +75,22 @@ namespace SampleApp.Controllers
         public ActionResult<string> Exception()
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// healthcheck
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("hc")]
+        public ActionResult<string> HealthCheck()
+        {
+            var dl = new DiagnosticListener("HealthChecks");
+            dl.Write("healthcheck", new Dictionary<string, bool>
+            {
+                {"dep1", true },
+                {"dep2", false }
+            });
+            return Ok();
         }
     }
 }

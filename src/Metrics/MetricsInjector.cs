@@ -22,8 +22,17 @@ namespace Metrics
             var httpConfiguration = configuration.GetSection(HttpConfiguration.SectionKey).Get<HttpConfiguration>();
             var massTransitConfiguration = configuration.GetSection(MassTransitConfiguration.SectionKey).Get<MassTransitConfiguration>();
             var entityFrameworkCoreConfiguration = configuration.GetSection(EntityFrameworkCoreConfiguration.SectionKey).Get<EntityFrameworkCoreConfiguration>();
+            var healthChecksConfiguration = configuration.GetSection(HealthChecksConfiguration.SectionKey).Get<HealthChecksConfiguration>();
+            var serviceConfiguration = configuration.GetSection(ServiceConfiguration.SectionKey).Get<ServiceConfiguration>();
 
-            DiagnosticListener.AllListeners.Subscribe(new DiagnosticsObserver(statsdConfiguration, httpConfiguration, massTransitConfiguration, entityFrameworkCoreConfiguration));
+            DiagnosticListener.AllListeners.Subscribe(
+                new DiagnosticsObserver(
+                    statsdConfiguration,
+                    httpConfiguration,
+                    massTransitConfiguration,
+                    entityFrameworkCoreConfiguration,
+                    healthChecksConfiguration,
+                    serviceConfiguration));
         }
     }
 }

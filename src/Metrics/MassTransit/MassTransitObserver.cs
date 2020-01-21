@@ -1,4 +1,5 @@
-﻿using Metrics.Extensions;
+﻿using Metrics.Configuration;
+using Metrics.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -14,10 +15,12 @@ namespace Metrics.MassTransit
     {
         private readonly ConcurrentDictionary<Guid, MessageConsumingInfo> info = new ConcurrentDictionary<Guid, MessageConsumingInfo>();
         private readonly MassTransitConfiguration _massTransitConfiguration;
+        private readonly ServiceConfiguration _serviceConfiguration;
 
-        public MassTransitObserver(MassTransitConfiguration massTransitConfiguration)
+        public MassTransitObserver(MassTransitConfiguration massTransitConfiguration, ServiceConfiguration serviceConfiguration)
         {
             _massTransitConfiguration = massTransitConfiguration;
+            _serviceConfiguration = serviceConfiguration;
         }
 
         public void OnCompleted()
@@ -95,7 +98,8 @@ namespace Metrics.MassTransit
                     var tags = new List<string> {
                             $"messageType:{existing.MessageType}",
                             $"messageId:{existing.MessageId}",
-                            $"success:{success}"
+                            $"success:{success}",
+                            $"service:{_serviceConfiguration.Name}"
                         };
 
                     if (!success && exception != null)

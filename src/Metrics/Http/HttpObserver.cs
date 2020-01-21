@@ -16,10 +16,12 @@ namespace Metrics.Http
     {
         private readonly ConcurrentDictionary<string, RequestInfo> info = new ConcurrentDictionary<string, RequestInfo>();
         private readonly HttpConfiguration _httpConfiguration;
+        private readonly ServiceConfiguration _serviceConfiguration;
 
-        public HttpObserver(HttpConfiguration httpConfiguration)
+        public HttpObserver(HttpConfiguration httpConfiguration, ServiceConfiguration serviceConfiguration)
         {
             _httpConfiguration = httpConfiguration;
+            _serviceConfiguration = serviceConfiguration;
         }
 
         public void OnCompleted()
@@ -99,6 +101,7 @@ namespace Metrics.Http
                             $"controller:{existing.ControllerName ?? ""}",
                             $"statusCode:{httpContext.Response.StatusCode}",
                             $"traceIdentifier:{traceIdentifier}",
+                            $"service:{_serviceConfiguration.Name}"
                         };
                     if (existing.Exception != null)
                     {

@@ -1,5 +1,6 @@
 ﻿using Metrics.Configuration;
 using Metrics.EntityFrameworkCore;
+using Metrics.HealthChecks;
 using Metrics.Http;
 using Metrics.MassTransit;
 using StatsdClient;
@@ -13,34 +14,31 @@ namespace Metrics
     ///     - http requests
     ///     - entity framework core queries
     ///     - masstransit message consuming
+    ///     - healthchecks
     /// </summary>
     internal class DiagnosticsObserver : IObserver<DiagnosticListener>
     {
         private readonly HttpConfiguration _httpConfiguration;
         private readonly MassTransitConfiguration _massTransitConfiguration;
         private readonly EntityFrameworkCoreConfiguration _entityFrameworkCoreConfiguration;
+        private readonly HealthChecksConfiguration _healthChecksConfiguration;
+        private readonly ServiceConfiguration _serviceConfiguration;
 
         public DiagnosticsObserver(
             StatsdConfiguration statsdConfiguration,
             HttpConfiguration httpConfiguration,
             MassTransitConfiguration massTransitConfiguration,
-            EntityFrameworkCoreConfiguration entityFrameworkCoreConfiguration)
+            EntityFrameworkCoreConfiguration entityFrameworkCoreConfiguration,
+            HealthChecksConfiguration healthChecksConfiguration,
+            ServiceConfiguration serviceConfiguration)
         {
-            if (statsdConfiguration is null)
-            {
-                throw new ArgumentNullException("statsdConfiguration");
-            }
-
-            if (httpConfiguration is null)
-            {
-                throw new ArgumentNullException("httpConfiguration");
-            }
-
             ConfigureStatsd(statsdConfiguration);
 
             _httpConfiguration = httpConfiguration;
             _massTransitConfiguration = massTransitConfiguration;
             _entityFrameworkCoreConfiguration = entityFrameworkCoreConfiguration;
+            _healthChecksConfiguration = healthChecksConfiguration;
+            _serviceConfiguration = serviceConfiguration;
         }
 
         private void ConfigureStatsd(StatsdConfiguration statsdConfiguration)
@@ -64,17 +62,22 @@ namespace Metrics
         {
             if (value.Name == "Microsoft.AspNetCore" && _httpConfiguration.Enabled)
             {
-                value.Subscribe(new HttpObserver(_httpConfiguration));
+                value.Subscribe(new HttpObserver(_httpConfiguration, _serviceConfiguration));
             }
 
             if (value.Name == "MassTransit" && _massTransitConfiguration.Enabled)
             {
-                value.Subscribe(new MassTransitObserver(_massTransitConfiguration));
+                value.Subscribe(new MassTransitObserver(_massTransitConfiguration, _serviceConfiguration));
             }
 
             if (value.Name == "Microsoft.EntityFrameworkCore" && _entityFrameworkCoreConfiguration.Enabled)
             {
-                value.Subscribe(new EntityFrameworkCoreObserver(_entityFrameworkCoreConfiguration));
+                value.Subscribe(new EntityFrameworkCoreObserver(_entityFrameworkCoreConfiguration, _serviceConfiguration));
+            }
+
+            if (value.Name == "HealthChecks" && _healthChecksConfiguration.Enabled)
+            {
+                value.Subscribe(new HealthChecksObserver(_healthChecksConfiguration, _serviceConfiguration));
             }
         }
     }
