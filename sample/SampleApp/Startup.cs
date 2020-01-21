@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using Metrics.Extensions.MassTransit;
+using Metrics.Extensions.Tracking;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -61,6 +62,8 @@ namespace SampleApp
             });
 
             services.AddHostedService<BusService>();
+
+            services.AddTransient<ICustomTracker, CustomTracker>();
         }
 
         private void ConfigureDatabase(IServiceCollection services)

@@ -6,6 +6,9 @@ RUN mkdir /nuget
 RUN dotnet build -c Release --configfile nuget.config src/Metrics.Extensions.MassTransit/Metrics.Extensions.MassTransit.csproj
 RUN dotnet pack -c Release -o /nuget src/Metrics.Extensions.MassTransit/Metrics.Extensions.MassTransit.csproj
 
+RUN dotnet build -c Release --configfile nuget.config src/Metrics.Extensions.Tracking/Metrics.Extensions.Tracking.csproj
+RUN dotnet pack -c Release -o /nuget src/Metrics.Extensions.Tracking/Metrics.Extensions.Tracking.csproj
+
 RUN dotnet publish -c Release -o /app sample/SampleApp/SampleApp.csproj
 
 FROM baseimage:2.1
