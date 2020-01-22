@@ -1,0 +1,1039 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 1,
+  "iteration": 1579648950502,
+  "links": [],
+  "panels": [
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "hiddenSeries": false,
+      "id": 4,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "min(samplehc{dependency=~\"$dependencies\",service=~\"$services\"}) by(service,dependency) < 1",
+          "legendFormat": "{{service}} - {{dependency}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 0.5,
+          "yaxis": "left"
+        }
+      ],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "HealthCheck",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "columns": [],
+      "datasource": null,
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 6,
+      "options": {},
+      "pageSize": null,
+      "showHeader": true,
+      "sort": {
+        "col": null,
+        "desc": false
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "expr": "sort_desc(topk(100, max by(controller, action) (samplehttp{quantile=\"0.99\",service=~\"$services\"})))",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Expensive HTTP Requests",
+      "transform": "table",
+      "type": "table"
+    },
+    {
+      "columns": [],
+      "datasource": "Prometheus",
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 8,
+      "options": {},
+      "pageSize": null,
+      "showHeader": true,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "instance",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "job",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "quantile",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "Value",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "__name__",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "string",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "expr": "samplehttp{service=~\"$services\",statusCode!=\"200\",quantile=\"0.99\"}",
+          "format": "table",
+          "instant": false,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Http Errors",
+      "transform": "table",
+      "type": "table"
+    },
+    {
+      "columns": [],
+      "datasource": null,
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 10,
+      "options": {},
+      "pageSize": null,
+      "showHeader": true,
+      "sort": {
+        "col": null,
+        "desc": false
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "expr": "sort_desc(topk(100, max by(service, messageType) (samplemasstransit{quantile=\"0.99\",service=~\"$services\"})))",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Expensive Masstransit Executions",
+      "transform": "table",
+      "type": "table"
+    },
+    {
+      "columns": [],
+      "datasource": null,
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "id": 11,
+      "options": {},
+      "pageSize": null,
+      "showHeader": true,
+      "sort": {
+        "col": null,
+        "desc": false
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "__name__",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "instance",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "job",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "quantile",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "success",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "Value",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "expr": "samplemasstransit{quantile=\"0.99\",service=~\"$services\",success=\"False\"}",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Masstransit Errors",
+      "transform": "table",
+      "type": "table"
+    },
+    {
+      "columns": [],
+      "datasource": null,
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "id": 12,
+      "options": {},
+      "pageSize": null,
+      "showHeader": true,
+      "sort": {
+        "col": null,
+        "desc": false
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "expr": "sort_desc(topk(100, max by(service, commandText) (sampleef{quantile=\"0.99\",service=~\"$services\"})))",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Expensive EFCore Executions",
+      "transform": "table",
+      "type": "table"
+    },
+    {
+      "columns": [],
+      "datasource": null,
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "id": 13,
+      "options": {},
+      "pageSize": null,
+      "showHeader": true,
+      "sort": {
+        "col": null,
+        "desc": false
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "__name__",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "instance",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "job",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "quantile",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "success",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "Value",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "expr": "sampleef{quantile=\"0.99\",service=~\"$services\",success=\"False\"}",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "EFCore Errors",
+      "transform": "table",
+      "type": "table"
+    },
+    {
+      "columns": [],
+      "datasource": null,
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 32
+      },
+      "id": 14,
+      "options": {},
+      "pageSize": null,
+      "showHeader": true,
+      "sort": {
+        "col": null,
+        "desc": false
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "expr": "sort_desc(topk(100, max by(service, activityName) (samplecustomtracking{quantile=\"0.99\",service=~\"$services\"})))",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Expensive Custom Executions",
+      "transform": "table",
+      "type": "table"
+    },
+    {
+      "columns": [],
+      "datasource": null,
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 32
+      },
+      "id": 15,
+      "options": {},
+      "pageSize": null,
+      "showHeader": true,
+      "sort": {
+        "col": null,
+        "desc": false
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "__name__",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "instance",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "job",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "quantile",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "success",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "Value",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "expr": "samplecustomtracking{quantile=\"0.99\",service=~\"$services\",success=\"False\"}",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Custom Execution Errors",
+      "transform": "table",
+      "type": "table"
+    }
+  ],
+  "schemaVersion": 21,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "tags": [],
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "Prometheus",
+        "definition": "query_result(count(samplehc) by (service))",
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "services",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "sampleapp",
+            "value": "sampleapp"
+          }
+        ],
+        "query": "query_result(count(samplehc) by (service))",
+        "refresh": 0,
+        "regex": "/service=\\\"(.*)\\\"/",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "Prometheus",
+        "definition": "query_result(count(samplehc) by (dependency))",
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "dependencies",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "dep1",
+            "value": "dep1"
+          },
+          {
+            "selected": false,
+            "text": "dep2",
+            "value": "dep2"
+          },
+          {
+            "selected": false,
+            "text": "sampleapp",
+            "value": "sampleapp"
+          }
+        ],
+        "query": "query_result(count(samplehc) by (dependency))",
+        "refresh": 0,
+        "regex": "/dependency=\\\"(.*)\\\"/",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "",
+  "title": "SampleDashboard",
+  "uid": "ui799SyZz",
+  "version": 1
+}
