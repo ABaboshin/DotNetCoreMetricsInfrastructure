@@ -1,6 +1,8 @@
 ﻿using Metrics.Configuration;
+using Metrics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 
 [assembly: HostingStartup(typeof(Metrics.MetricsInjector))]
@@ -31,9 +33,14 @@ namespace Metrics
                     httpConfiguration,
                     massTransitConfiguration,
                     entityFrameworkCoreConfiguration,
-                    healthChecksConfiguration,
                     customTrackingConfiguration,
                     serviceConfiguration));
+
+            builder.ConfigureServices(services => {
+                services.AddSingleton<IStartupFilter>(serviceProvider => {
+                    return new HealthChecksFilter(healthChecksConfiguration);
+                });
+            });
         }
     }
 }
