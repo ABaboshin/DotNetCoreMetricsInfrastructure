@@ -19,5 +19,10 @@
         /// metric name
         /// </summary>
         public string Name { get; set; } = "healthcheck";
+
+        /// <summary>
+        /// healthcheck url
+        /// </summary>
+        public string Url { get; set; } = "/api/hc";
     }
 }
