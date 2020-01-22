@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.1.803 as build
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2.207 as build
 RUN apt-get update && apt-get install -y jq
 
 COPY . .
@@ -7,12 +7,12 @@ RUN mkdir /nuget
 RUN dotnet build -c Release --configfile nuget.config src/Metrics/Metrics.csproj
 RUN dotnet pack -c Release -o /nuget src/Metrics/Metrics.csproj
 
-RUN dotnet store --manifest src/EmtpyConsole/EmtpyConsole.csproj --runtime linux-x64 --output /deployment/store --skip-optimization --framework netcoreapp2.1 --framework-version 2.1.15
+RUN dotnet store --manifest src/EmtpyConsole/EmtpyConsole.csproj --runtime linux-x64 --output /deployment/store --skip-optimization --framework netcoreapp2.2 --framework-version 2.2.8
 RUN dotnet publish src/EmtpyConsole/EmtpyConsole.csproj -o /tmp
-RUN mkdir -p /deployment/additionalDeps/shared/Microsoft.AspNetCore.App/2.1.15/
-RUN cat /tmp/EmtpyConsole.deps.json | jq 'del(.libraries."EmtpyConsole/1.0.0") | del(.targets.".NETCoreApp,Version=v2.1"."EmtpyConsole/1.0.0")' > /deployment/additionalDeps/shared/Microsoft.AspNetCore.App/2.1.15/Metrics.deps.json
+RUN mkdir -p /deployment/additionalDeps/shared/Microsoft.AspNetCore.App/2.2.8/
+RUN cat /tmp/EmtpyConsole.deps.json | jq 'del(.libraries."EmtpyConsole/1.0.0") | del(.targets.".NETCoreApp,Version=v2.2"."EmtpyConsole/1.0.0")' > /deployment/additionalDeps/shared/Microsoft.AspNetCore.App/2.2.8/Metrics.deps.json
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.1.15
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2.8
 
 RUN apt update && apt install less vim -y
 
@@ -20,5 +20,5 @@ COPY --from=build /deployment /deployment
 
 ENV ASPNETCORE_HOSTINGSTARTUPASSEMBLIES=Metrics
 ENV DOTNET_SHARED_STORE=/deployment/store/
-ENV DOTNET_ADDITIONAL_DEPS=/deployment/additionalDeps/shared/Microsoft.AspNetCore.App/2.1.15/Metrics.deps.json
-ENV DOTNET_ADDITIONALPROBINGPATH=/deployment/store/x64/netcoreapp2.1/metrics/1.0.0/lib/netcoreapp2.1
+ENV DOTNET_ADDITIONAL_DEPS=/deployment/additionalDeps/shared/Microsoft.AspNetCore.App/2.2.8/Metrics.deps.json
+ENV DOTNET_ADDITIONALPROBINGPATH=/deployment/store/x64/netcoreapp2.2/metrics/1.0.0/lib/netcoreapp2.2

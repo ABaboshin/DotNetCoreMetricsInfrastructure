@@ -11,8 +11,8 @@
     "buildMetrics": "dotnet build -c Release --configfile nuget.config -o nuget src/Metrics/Metrics.csproj",
     "nugetMetrics": "yarn buildMetrics && dotnet pack -c Release src/Metrics/Metrics.csproj",
     "nuget": "yarn nugetMetrics.Extensions.MassTransit && yarn nugetMetrics && yarn nugetMetrics.Extensions.Tracking",
-    "baseimage": "docker build --no-cache -t baseimage:2.1 -f Dockerfile.baseimage .",
-    "sampleappimage": "docker build --no-cache -t sampleapp:2.1 -f Dockerfile.sampleapp .",
+    "baseimage": "docker build --no-cache -t baseimage:2.2 -f Dockerfile.baseimage .",
+    "sampleappimage": "docker build --no-cache -t sampleapp:2.2 -f Dockerfile.sampleapp .",
     "prometheus": "docker build --no-cache -t prometheus:local -f prometheus/Dockerfile prometheus",
     "grafana": "docker build --no-cache -t grafana:local -f grafana/Dockerfile grafana",
     "images": "yarn baseimage && yarn sampleappimage"

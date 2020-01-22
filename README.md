@@ -1,6 +1,6 @@
-# Metrics as a part of an insfrastucture for .net core 2.1
+# Metrics as a part of an insfrastucture for .net core 2.2
 
-This project demonstrates a way to provide the metrics for aspnet core 2.1 app as a part of an ifrastructure.
+This project demonstrates a way to provide the metrics for aspnet core 2.2 app as a part of an ifrastructure.
 
 ## Project structure
 
@@ -63,13 +63,13 @@ To create the base image run
 yarn baseimage
 ```
 
-as a result the `baseimage:2.1` will be crated.
+as a result the `baseimage:2.2` will be crated.
 
 ### Sample
 
 In order to demonstrate how it works the following things were created:
- - [A sample project](sample/SampleApp) is a aspnet core 2.1 app where `Metrics.Extensions.MassTransit` is referencing.
- - `Dockerfile.sampleapp` to build an image on top of `baseimage:2.1`.
+ - [A sample project](sample/SampleApp) is a aspnet core 2.2 app where `Metrics.Extensions.MassTransit` is referencing.
+ - `Dockerfile.sampleapp` to build an image on top of `baseimage:2.2`.
  - [docker-compose](sample/docker-compose.yml) to bring it all together.
 
 How to run the sample:
