@@ -37,9 +37,13 @@ namespace Metrics
                     serviceConfiguration));
 
             builder.ConfigureServices(services => {
-                services.AddSingleton<IStartupFilter>(serviceProvider => {
-                    return new HealthChecksFilter(healthChecksConfiguration);
-                });
+                if (healthChecksConfiguration.Enabled)
+                {
+                    services.AddHealthChecks();
+                    services.AddSingleton<IStartupFilter>(serviceProvider => {
+                        return new HealthChecksFilter(healthChecksConfiguration);
+                    });
+                }
             });
         }
     }

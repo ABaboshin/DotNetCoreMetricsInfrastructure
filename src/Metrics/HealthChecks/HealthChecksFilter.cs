@@ -20,10 +20,7 @@ namespace Metrics.HealthChecks
         public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
         {
             return builder => {
-                builder.MapWhen(
-                    _ => _.Request.Path.Equals(_healthChecksConfiguration.Url),
-                    _ => _.UseMiddleware<HealthChecksMiddleware>(_healthChecksConfiguration)
-                );
+                builder.UseHealthChecks(_healthChecksConfiguration.Url);
                 next(builder);
             };
         }
