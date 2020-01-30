@@ -45,6 +45,11 @@ namespace Metrics
                     healthCheckBuilder.AddSqlServer(healthChecksConfiguration.Sql.ConnectionString);
                 }
 
+                if (healthChecksConfiguration.Redis.Enabled)
+                {
+                    healthCheckBuilder.AddRedis(healthChecksConfiguration.Redis.ConnectionString);
+                }
+
                 services.AddSingleton<IStartupFilter>(serviceProvider => {
                     return new HealthChecksFilter(healthChecksConfiguration, serviceConfiguration);
                 });

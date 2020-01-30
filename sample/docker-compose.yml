@@ -21,6 +21,10 @@ services:
     ports:
       - "15672:15672"
       - "5672:5672"
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
   sampleapp:
     image: sampleapp:2.2
     environment:
@@ -34,6 +38,8 @@ services:
       entityframeworkcore_metrics__name: "sampleef"
       healthcheck__metrics__enabled: "true"
       healthcheck__metrics__name: "samplehc"
+      healthcheck__redis__enabled: "true"
+      healthcheck__redis__CONNECTIONSTRING: "redis"
       healthcheck__sql__enabled: "true"
       healthcheck__sql__CONNECTIONSTRING: "Server=sqlserver;Database=mydb;User Id=sa;Password=passwoyourStrong(!)Passwordrd;"
       http_metrics__enabled: "true"

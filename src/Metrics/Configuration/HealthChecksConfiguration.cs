@@ -21,6 +21,11 @@
         public SqlHealthChecksConfiguration Sql { get; set; } = new SqlHealthChecksConfiguration();
 
         /// <summary>
+        /// redis health checks
+        /// </summary>
+        public RedisHealthChecksConfiguration Redis { get; set; } = new RedisHealthChecksConfiguration();
+
+        /// <summary>
         /// health checks metrics
         /// </summary>
         public HealthChecksMetricsConfiguration Mertrics { get; set; } = new HealthChecksMetricsConfiguration();
