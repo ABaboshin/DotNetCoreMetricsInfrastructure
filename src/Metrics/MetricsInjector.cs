@@ -3,6 +3,7 @@ using Metrics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Diagnostics;
 
 [assembly: HostingStartup(typeof(Metrics.MetricsInjector))]
@@ -37,13 +38,16 @@ namespace Metrics
                     serviceConfiguration));
 
             builder.ConfigureServices(services => {
-                if (healthChecksConfiguration.Enabled)
+                var healthCheckBuilder = services.AddHealthChecks();
+
+                if (healthChecksConfiguration.Sql.Enabled)
                 {
-                    services.AddHealthChecks();
-                    services.AddSingleton<IStartupFilter>(serviceProvider => {
-                        return new HealthChecksFilter(healthChecksConfiguration);
-                    });
+                    healthCheckBuilder.AddSqlServer(healthChecksConfiguration.Sql.ConnectionString);
                 }
+
+                services.AddSingleton<IStartupFilter>(serviceProvider => {
+                    return new HealthChecksFilter(healthChecksConfiguration, serviceConfiguration);
+                });
             });
         }
     }
