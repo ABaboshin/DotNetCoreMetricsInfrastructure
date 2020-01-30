@@ -3,7 +3,6 @@ using Metrics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Diagnostics;
 
 [assembly: HostingStartup(typeof(Metrics.MetricsInjector))]
@@ -48,6 +47,11 @@ namespace Metrics
                 if (healthChecksConfiguration.Redis.Enabled)
                 {
                     healthCheckBuilder.AddRedis(healthChecksConfiguration.Redis.ConnectionString);
+                }
+
+                if (healthChecksConfiguration.RabbitMQ.Enabled)
+                {
+                    healthCheckBuilder.AddRabbitMQ(healthChecksConfiguration.RabbitMQ.ConnectionString);
                 }
 
                 services.AddSingleton<IStartupFilter>(serviceProvider => {

@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AspNetCore.HealthChecks.Rabbitmq" Version="2.2.0" />
         <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="2.2.0" />
         <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="2.2.0" />
         <PackageReference Include="DogStatsD-CSharp-Client" Version="3.2.0" />

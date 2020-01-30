@@ -1,12 +1,12 @@
 ﻿namespace Metrics.Configuration
 {
     /// <summary>
-    /// redis health checks configuration
+    /// rabbitmq health checks configuration
     /// </summary>
-    internal class  RedisHealthChecksConfiguration
+    internal class RabbitMQHealthChecksConfiguration
     {
         /// <summary>
-        /// enable redis health checks
+        /// enable rabbitmq health checks
         /// </summary>
         public bool Enabled { get; set; } = false;
         /// <summary>

@@ -26,6 +26,11 @@
         public RedisHealthChecksConfiguration Redis { get; set; } = new RedisHealthChecksConfiguration();
 
         /// <summary>
+        /// redis health checks
+        /// </summary>
+        public RabbitMQHealthChecksConfiguration RabbitMQ { get; set; } = new RabbitMQHealthChecksConfiguration();
+
+        /// <summary>
         /// health checks metrics
         /// </summary>
         public HealthChecksMetricsConfiguration Mertrics { get; set; } = new HealthChecksMetricsConfiguration();

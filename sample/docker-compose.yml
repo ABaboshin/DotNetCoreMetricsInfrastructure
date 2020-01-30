@@ -38,6 +38,8 @@ services:
       entityframeworkcore_metrics__name: "sampleef"
       healthcheck__metrics__enabled: "true"
       healthcheck__metrics__name: "samplehc"
+      healthcheck__rabbitmq__enabled: "true"
+      healthcheck__rabbitmq__CONNECTIONSTRING: "amqp://admin:password@rabbitmq/"
       healthcheck__redis__enabled: "true"
       healthcheck__redis__CONNECTIONSTRING: "redis"
       healthcheck__sql__enabled: "true"
