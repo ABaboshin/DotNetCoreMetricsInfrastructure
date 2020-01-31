@@ -7,7 +7,9 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace Metrics.HealthChecks
@@ -34,7 +36,7 @@ namespace Metrics.HealthChecks
                     new HealthCheckOptions
                     {
                         ResponseWriter = WriteResponse
-                    }
+            }
                 );
                 next(builder);
             };
@@ -42,7 +44,8 @@ namespace Metrics.HealthChecks
 
         private Task WriteResponse(HttpContext httpContext, HealthReport result)
         {
-            httpContext.Response.ContentType = "application/json";
+            Console.WriteLine("WriteResponse");
+            httpContext.Response.ContentType = MediaTypeNames.Application.Json;
 
             var data = new
             {

@@ -54,6 +54,14 @@ namespace Metrics
                     healthCheckBuilder.AddRabbitMQ(healthChecksConfiguration.RabbitMQ.ConnectionString);
                 }
 
+                if (healthChecksConfiguration.Urls.Enabled)
+                {
+                    foreach (var url in healthChecksConfiguration.Urls.Urls)
+                    {
+                        healthCheckBuilder.AddCheck(url, new UrlHealthCheck(url));
+                    }
+                }
+
                 services.AddSingleton<IStartupFilter>(serviceProvider => {
                     return new HealthChecksFilter(healthChecksConfiguration, serviceConfiguration);
                 });

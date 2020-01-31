@@ -31,8 +31,15 @@
         public RabbitMQHealthChecksConfiguration RabbitMQ { get; set; } = new RabbitMQHealthChecksConfiguration();
 
         /// <summary>
+        /// url health checks
+        /// </summary>
+        public UrlsHealthChecksConfiguration Urls { get; set; } = new UrlsHealthChecksConfiguration();
+
+        /// <summary>
         /// health checks metrics
         /// </summary>
         public HealthChecksMetricsConfiguration Mertrics { get; set; } = new HealthChecksMetricsConfiguration();
     }
+
+
 }

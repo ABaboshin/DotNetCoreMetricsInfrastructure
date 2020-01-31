@@ -29,7 +29,7 @@ services:
     image: sampleapp:2.2
     environment:
       ASPNETCORE_URLS: "http://*:5000"
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: Production
       STATSD__PORT: "9125"
       STATSD__SERVER: "statsd"
       customtracking_metrics__enabled: "true"
@@ -42,6 +42,9 @@ services:
       healthcheck__rabbitmq__CONNECTIONSTRING: "amqp://admin:password@rabbitmq/"
       healthcheck__redis__enabled: "true"
       healthcheck__redis__CONNECTIONSTRING: "redis"
+      healthcheck__url: "/api/hc"
+      healthcheck__urls__enabled: "true"
+      healthcheck__urls__urlslist: "http://sampleapp2:6000/api/hc,http://sampleapp2:6000/api/values"
       healthcheck__sql__enabled: "true"
       healthcheck__sql__CONNECTIONSTRING: "Server=sqlserver;Database=mydb;User Id=sa;Password=passwoyourStrong(!)Passwordrd;"
       http_metrics__enabled: "true"
@@ -55,6 +58,18 @@ services:
       RABBITMQ__PASSWORD: "password"
     ports:
       - "5000:5000"
+  sampleapp2:
+    image: sampleapp2:2.2
+    environment:
+      ASPNETCORE_URLS: "http://*:6000"
+      ASPNETCORE_ENVIRONMENT: Development
+      STATSD__PORT: "9125"
+      STATSD__SERVER: "statsd"
+      healthcheck__metrics__enabled: "true"
+      healthcheck__metrics__name: "samplehc"
+      http_metrics__enabled: "true"
+      http_metrics__name: "samplehttp"
+      service__name: "sampleapp2"
   prometheus:
     image: prometheus:local
     environment:
