@@ -99,7 +99,9 @@ the healthcheck mocked here for the demonstration purposes.
 
 The metrics can be seen in statsd at `http://localhost:9102/metrics`.
 
-## Further steps
+## TBD
 
- - Create prometheus alers
- - Create grafana dashboards
+ - documentation
+ - masstransit bus
+ - masstransit endpoints
+ - unit tests
