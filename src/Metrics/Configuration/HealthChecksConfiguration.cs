@@ -38,7 +38,7 @@
         /// <summary>
         /// health checks metrics
         /// </summary>
-        public HealthChecksMetricsConfiguration Mertrics { get; set; } = new HealthChecksMetricsConfiguration();
+        public HealthChecksMetricsConfiguration Metrics { get; set; } = new HealthChecksMetricsConfiguration();
     }
 
 

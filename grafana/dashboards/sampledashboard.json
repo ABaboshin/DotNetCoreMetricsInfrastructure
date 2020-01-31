@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1579648950502,
+  "iteration": 1580431935487,
   "links": [],
   "panels": [
     {
@@ -928,7 +928,6 @@
       {
         "allValue": null,
         "current": {
-          "tags": [],
           "text": "All",
           "value": [
             "$__all"
@@ -941,20 +940,9 @@
         "label": null,
         "multi": true,
         "name": "services",
-        "options": [
-          {
-            "selected": true,
-            "text": "All",
-            "value": "$__all"
-          },
-          {
-            "selected": false,
-            "text": "sampleapp",
-            "value": "sampleapp"
-          }
-        ],
+        "options": [],
         "query": "query_result(count(samplehc) by (service))",
-        "refresh": 0,
+        "refresh": 2,
         "regex": "/service=\\\"(.*)\\\"/",
         "skipUrlSync": false,
         "sort": 1,
@@ -979,30 +967,9 @@
         "label": null,
         "multi": true,
         "name": "dependencies",
-        "options": [
-          {
-            "selected": true,
-            "text": "All",
-            "value": "$__all"
-          },
-          {
-            "selected": false,
-            "text": "dep1",
-            "value": "dep1"
-          },
-          {
-            "selected": false,
-            "text": "dep2",
-            "value": "dep2"
-          },
-          {
-            "selected": false,
-            "text": "sampleapp",
-            "value": "sampleapp"
-          }
-        ],
+        "options": [],
         "query": "query_result(count(samplehc) by (dependency))",
-        "refresh": 0,
+        "refresh": 2,
         "regex": "/dependency=\\\"(.*)\\\"/",
         "skipUrlSync": false,
         "sort": 1,
@@ -1035,5 +1002,5 @@
   "timezone": "",
   "title": "SampleDashboard",
   "uid": "ui799SyZz",
-  "version": 1
+  "version": 2
 }

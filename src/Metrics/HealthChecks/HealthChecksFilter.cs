@@ -73,6 +73,23 @@ namespace Metrics.HealthChecks
                 }
             );
 
+            Console.WriteLine(_healthChecksConfiguration.Metrics.Enabled);
+            Console.WriteLine(_healthChecksConfiguration.Metrics.Name);
+            if (_healthChecksConfiguration.Metrics.Enabled)
+            {
+                Console.WriteLine(_healthChecksConfiguration.Metrics.Name);
+                StatsdClient.DogStatsd.Gauge(_healthChecksConfiguration.Metrics.Name,
+                    result.Status == HealthStatus.Healthy ? 1 : 0,
+                    tags: new[] { $"service:{_serviceConfiguration.Name}", $"dependency:{_serviceConfiguration.Name}" });
+
+                foreach (var dependency in result.Entries)
+                {
+                    StatsdClient.DogStatsd.Gauge(_healthChecksConfiguration.Metrics.Name,
+                        dependency.Value.Status == HealthStatus.Healthy ? 1 : 0,
+                        tags: new[] { $"service:{_serviceConfiguration.Name}", $"dependency:{dependency.Key}" });
+                }
+            }
+
             return httpContext.Response.WriteAsync(json);
         }
     }
