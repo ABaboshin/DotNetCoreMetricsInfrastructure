@@ -21,7 +21,7 @@ namespace Metrics.Extensions.MassTransit
 
         public async Task Send(T context, IPipe<T> next)
         {
-            var source = new DiagnosticListener("MassTransit");
+            var source = new DiagnosticListener(DiagnosticListenerUtil.ExectionEventName);
 
             var message = context.GetType().GetTypeInfo().GetDeclaredProperty("Message")?.GetValue(context);
             var messageId = context.GetType().GetTypeInfo().GetDeclaredProperty("MassTransit.MessageContext.MessageId")?.GetValue(context);

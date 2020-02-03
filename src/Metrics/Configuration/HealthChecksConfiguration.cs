@@ -34,12 +34,5 @@
         /// url health checks
         /// </summary>
         public UrlsHealthChecksConfiguration Urls { get; set; } = new UrlsHealthChecksConfiguration();
-
-        /// <summary>
-        /// health checks metrics
-        /// </summary>
-        public HealthChecksMetricsConfiguration Metrics { get; set; } = new HealthChecksMetricsConfiguration();
     }
-
-
 }

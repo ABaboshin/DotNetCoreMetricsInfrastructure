@@ -6,6 +6,11 @@
     internal class HealthChecksMetricsConfiguration
     {
         /// <summary>
+        /// Section name in configuration
+        /// </summary>
+        public static readonly string SectionKey = "healthcheck_metrics";
+
+        /// <summary>
         /// enable tracking
         /// </summary>
 

@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Metrics.Extensions.MassTransit;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace SampleApp.MessageBus
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            _busControl.ConnectReceiveEndpointObserver(new HealthCheckReceiveEndpointObserver());
             await _busControl.StartAsync(cancellationToken);
         }
 

@@ -17,14 +17,16 @@ namespace Metrics.Extensions.Tracking
 
         public void Finish(Exception exception = null)
         {
-            var source = new DiagnosticListener("CustomTracking");
-            source.Write("track", new
+            using (var source = new DiagnosticListener("CustomTracking"))
             {
-                Duration = (DateTime.UtcNow - _start).TotalMilliseconds,
-                ActivityName,
-                TraceIdentifier,
-                Exception = exception
-            });
+                source.Write("track", new
+                {
+                    Duration = (DateTime.UtcNow - _start).TotalMilliseconds,
+                    ActivityName,
+                    TraceIdentifier,
+                    Exception = exception
+                });
+            }
         }
     }
 }

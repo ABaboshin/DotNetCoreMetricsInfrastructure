@@ -26,6 +26,7 @@ namespace Metrics
             var healthChecksConfiguration = configuration.GetSection(HealthChecksConfiguration.SectionKey).Get<HealthChecksConfiguration>();
             var customTrackingConfiguration = configuration.GetSection(CustomTrackingConfiguration.SectionKey).Get<CustomTrackingConfiguration>();
             var serviceConfiguration = configuration.GetSection(ServiceConfiguration.SectionKey).Get<ServiceConfiguration>();
+            var healthChecksMetricsConfiguration = configuration.GetSection(HealthChecksMetricsConfiguration.SectionKey).Get<HealthChecksMetricsConfiguration>();
 
             DiagnosticListener.AllListeners.Subscribe(
                 new DiagnosticsObserver(
@@ -34,7 +35,8 @@ namespace Metrics
                     massTransitConfiguration,
                     entityFrameworkCoreConfiguration,
                     customTrackingConfiguration,
-                    serviceConfiguration));
+                    serviceConfiguration,
+                    healthChecksMetricsConfiguration));
 
             builder.ConfigureServices(services => {
                 var healthCheckBuilder = services.AddHealthChecks();
