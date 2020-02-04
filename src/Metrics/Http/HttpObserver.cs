@@ -2,6 +2,7 @@
 using Metrics.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -17,11 +18,13 @@ namespace Metrics.Http
         private readonly ConcurrentDictionary<string, RequestInfo> info = new ConcurrentDictionary<string, RequestInfo>();
         private readonly HttpConfiguration _httpConfiguration;
         private readonly ServiceConfiguration _serviceConfiguration;
+        private readonly ILogger<HttpObserver> _logger;
 
-        public HttpObserver(HttpConfiguration httpConfiguration, ServiceConfiguration serviceConfiguration)
+        public HttpObserver(HttpConfiguration httpConfiguration, ServiceConfiguration serviceConfiguration, ILogger<HttpObserver> logger)
         {
             _httpConfiguration = httpConfiguration;
             _serviceConfiguration = serviceConfiguration;
+            _logger = logger;
         }
 
         public void OnCompleted()
@@ -107,7 +110,17 @@ namespace Metrics.Http
                     {
                         tags.AddRange(existing.Exception.GetTags());
                     }
-                    
+
+                    var msg = "HttpObserver {action} {controller} {statusCode} {traceIdentifier} {service}";
+                    if (existing.Exception != null)
+                    {
+                        _logger.LogDebug(existing.Exception, msg, existing.ActionName ?? "", existing.ControllerName ?? "", httpContext.Response.StatusCode, traceIdentifier, _serviceConfiguration.Name);
+                    }
+                    else
+                    {
+                        _logger.LogDebug(msg, existing.ActionName ?? "", existing.ControllerName ?? "", httpContext.Response.StatusCode, traceIdentifier, _serviceConfiguration.Name);
+                    }
+
                     StatsdClient.DogStatsd.Histogram(_httpConfiguration.Name,
                         (end - existing.Start).TotalMilliseconds,
                         tags: tags.ToArray());

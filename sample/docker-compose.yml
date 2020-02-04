@@ -1,35 +1,12 @@
 version: '3.3'
 
 services:
-  statsd:
-    image: prom/statsd-exporter:v0.12.2
-    ports:
-      - "9102:9102"
-      - "9125:9125/udp"
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
-    environment:
-      ACCEPT_EULA: "Y"
-      SA_PASSWORD: "passwoyourStrong(!)Passwordrd"
-    ports:
-      - "1433:1433"
-  rabbitmq:
-    image: rabbitmq:3.8.1-management
-    environment:
-      RABBITMQ_DEFAULT_USER: "admin"
-      RABBITMQ_DEFAULT_PASS: "password"
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-  redis:
-    image: redis:latest
-    ports:
-      - "6379:6379"
   sampleapp:
     image: sampleapp:2.2
     environment:
       ASPNETCORE_URLS: "http://*:5000"
       ASPNETCORE_ENVIRONMENT: Production
+      LOG_LEVEL: Verbose
       STATSD__PORT: "9125"
       STATSD__SERVER: "statsd"
       customtracking_metrics__enabled: "true"
@@ -58,6 +35,11 @@ services:
       RABBITMQ__PASSWORD: "password"
     ports:
       - "5000:5000"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: tcp://localhost:12201
+        tag: sampleapp
   sampleapp2:
     image: sampleapp2:2.2
     environment:
@@ -71,6 +53,18 @@ services:
       http_metrics__enabled: "true"
       http_metrics__name: "samplehttp"
       service__name: "sampleapp2"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: tcp://localhost:12201
+        tag: 2sampleapp
+
+  statsd:
+    image: prom/statsd-exporter:v0.12.2
+    ports:
+      - "9102:9102"
+      - "9125:9125/udp"
+
   prometheus:
     image: prometheus:local
     environment:
@@ -87,6 +81,7 @@ services:
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention.time=2d'
       - '--query.lookback-delta=1m'
+
   grafana:
     image: grafana:local
     environment:
@@ -94,3 +89,52 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=password
     ports:
       - "3000:3000"
+
+  kibana:
+    image: kibana:7.5.2
+    ports:
+      - "5601:5601"
+
+  elasticsearch:
+    image: elasticsearch:local
+    environment:
+      discovery.type: single-node
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  logstash:
+    image: logstash:local
+    environment:
+      LS_JAVA_OPTS: "-Xmx2g -Xms2g"
+    ports:
+      - "12201:12201"
+      - "9600:9600"
+      - "5044:5044"
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "passwoyourStrong(!)Passwordrd"
+    ports:
+      - "1433:1433"
+
+  rabbitmq:
+    image: rabbitmq:3.8.1-management
+    environment:
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "password"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: tcp://localhost:12201
+        tag: rabbitmq
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"

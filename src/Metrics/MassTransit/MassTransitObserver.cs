@@ -1,5 +1,6 @@
 ﻿using Metrics.Configuration;
 using Metrics.Extensions;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -16,11 +17,13 @@ namespace Metrics.MassTransit
         private readonly ConcurrentDictionary<Guid, MessageConsumingInfo> info = new ConcurrentDictionary<Guid, MessageConsumingInfo>();
         private readonly MassTransitConfiguration _massTransitConfiguration;
         private readonly ServiceConfiguration _serviceConfiguration;
+        private readonly ILogger<MassTransitObserver> _logger;
 
-        public MassTransitObserver(MassTransitConfiguration massTransitConfiguration, ServiceConfiguration serviceConfiguration)
+        public MassTransitObserver(MassTransitConfiguration massTransitConfiguration, ServiceConfiguration serviceConfiguration, ILogger<MassTransitObserver> logger)
         {
             _massTransitConfiguration = massTransitConfiguration;
             _serviceConfiguration = serviceConfiguration;
+            _logger = logger;
         }
 
         public void OnCompleted()
@@ -105,6 +108,16 @@ namespace Metrics.MassTransit
                     if (!success && exception != null)
                     {
                         tags.AddRange(exception.GetTags());
+                    }
+
+                    var msg = "MassTransitObserver {messageType} {messageId} {success} {service}";
+                    if (exception != null)
+                    {
+                        _logger.LogDebug(exception, msg, existing.MessageType, existing.MessageId, success, _serviceConfiguration.Name);
+                    }
+                    else
+                    {
+                        _logger.LogDebug(msg, existing.MessageType, existing.MessageId, success, _serviceConfiguration.Name);
                     }
 
                     StatsdClient.DogStatsd.Histogram(_massTransitConfiguration.Name,

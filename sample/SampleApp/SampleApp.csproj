@@ -17,6 +17,7 @@
     </PackageReference>
     <PackageReference Include="Metrics.Extensions.MassTransit" Version="1.0.0" />
     <PackageReference Include="Metrics.Extensions.Tracking" Version="1.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
   </ItemGroup>
 
 

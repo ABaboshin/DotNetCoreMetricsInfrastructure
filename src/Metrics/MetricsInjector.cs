@@ -3,6 +3,7 @@ using Metrics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 [assembly: HostingStartup(typeof(Metrics.MetricsInjector))]
@@ -27,16 +28,6 @@ namespace Metrics
             var customTrackingConfiguration = configuration.GetSection(CustomTrackingConfiguration.SectionKey).Get<CustomTrackingConfiguration>();
             var serviceConfiguration = configuration.GetSection(ServiceConfiguration.SectionKey).Get<ServiceConfiguration>();
             var healthChecksMetricsConfiguration = configuration.GetSection(HealthChecksMetricsConfiguration.SectionKey).Get<HealthChecksMetricsConfiguration>();
-
-            DiagnosticListener.AllListeners.Subscribe(
-                new DiagnosticsObserver(
-                    statsdConfiguration,
-                    httpConfiguration,
-                    massTransitConfiguration,
-                    entityFrameworkCoreConfiguration,
-                    customTrackingConfiguration,
-                    serviceConfiguration,
-                    healthChecksMetricsConfiguration));
 
             builder.ConfigureServices(services => {
                 var healthCheckBuilder = services.AddHealthChecks();
@@ -67,6 +58,20 @@ namespace Metrics
                 services.AddSingleton<IStartupFilter>(serviceProvider => {
                     return new HealthChecksFilter(healthChecksConfiguration, serviceConfiguration);
                 });
+
+                var sp = services.BuildServiceProvider();
+                var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
+
+                DiagnosticListener.AllListeners.Subscribe(
+                new DiagnosticsObserver(
+                    statsdConfiguration,
+                    httpConfiguration,
+                    massTransitConfiguration,
+                    entityFrameworkCoreConfiguration,
+                    customTrackingConfiguration,
+                    serviceConfiguration,
+                    healthChecksMetricsConfiguration,
+                    loggerFactory));
             });
         }
     }

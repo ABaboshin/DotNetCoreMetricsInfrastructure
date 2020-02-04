@@ -11,11 +11,3 @@ scrape_configs:
     static_configs:
       - targets:
           - statsd:9102
-  # - job_name: 'statsd'
-  #   dns_sd_configs:
-  #   - names:
-  #     - tasks.statsd
-  #     type: 'A'
-  #     port: 9102
-  #   tls_config:
-  #     insecure_skip_verify: true

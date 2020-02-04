@@ -17,6 +17,9 @@
     "sampleapp2image": "docker build --no-cache -t sampleapp2:2.2 -f Dockerfile.sampleapp2 .",
     "prometheus": "docker build --no-cache -t prometheus:local -f prometheus/Dockerfile prometheus",
     "grafana": "docker build --no-cache -t grafana:local -f grafana/Dockerfile grafana",
+    "logstash": "docker build --no-cache -t logstash:local -f logstash/Dockerfile logstash",
+    "elasticsearch": "docker build --no-cache -t elasticsearch:local -f elasticsearch/Dockerfile elasticsearch",
+    "infra": "yarn prometheus && yarn grafana && yarn logstash && yarn elasticsearch",
     "images": "yarn baseimage && yarn sampleappimage && yarn sampleapp2image"
   }
 }

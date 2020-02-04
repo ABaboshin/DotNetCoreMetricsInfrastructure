@@ -4,6 +4,7 @@ using Metrics.EntityFrameworkCore;
 using Metrics.HealthChecks;
 using Metrics.Http;
 using Metrics.MassTransit;
+using Microsoft.Extensions.Logging;
 using StatsdClient;
 using System;
 using System.Diagnostics;
@@ -25,11 +26,13 @@ namespace Metrics
         private readonly CustomTrackingConfiguration _customTrackingConfiguration;
         private readonly ServiceConfiguration _serviceConfiguration;
         private readonly HealthChecksMetricsConfiguration _healthChecksMetricsConfiguration;
+        private readonly ILoggerFactory _loggerFactory;
 
         private HttpObserver httpObserver;
         private MassTransitObserver mtObserver;
         private EntityFrameworkCoreObserver efObserver;
         private CustomTrackingObserver ctObserver;
+        private HealthChecksObserver hcObserver;
 
         public DiagnosticsObserver(
             StatsdConfiguration statsdConfiguration,
@@ -38,7 +41,8 @@ namespace Metrics
             EntityFrameworkCoreConfiguration entityFrameworkCoreConfiguration,
             CustomTrackingConfiguration customTrackingConfiguration,
             ServiceConfiguration serviceConfiguration,
-            HealthChecksMetricsConfiguration healthChecksMetricsConfiguration)
+            HealthChecksMetricsConfiguration healthChecksMetricsConfiguration,
+            ILoggerFactory loggerFactory)
         {
             ConfigureStatsd(statsdConfiguration);
 
@@ -48,6 +52,7 @@ namespace Metrics
             _customTrackingConfiguration = customTrackingConfiguration;
             _serviceConfiguration = serviceConfiguration;
             _healthChecksMetricsConfiguration = healthChecksMetricsConfiguration;
+            _loggerFactory = loggerFactory;
         }
 
         private void ConfigureStatsd(StatsdConfiguration statsdConfiguration)
@@ -71,31 +76,32 @@ namespace Metrics
         {
             if (value.Name == "Microsoft.AspNetCore" && _httpConfiguration.Enabled)
             {
-                httpObserver = new HttpObserver(_httpConfiguration, _serviceConfiguration);
+                httpObserver = new HttpObserver(_httpConfiguration, _serviceConfiguration, _loggerFactory.CreateLogger< HttpObserver>());
                 value.Subscribe(httpObserver);
             }
 
             if (value.Name == "MetricMassTransit" && _massTransitConfiguration.Enabled)
             {
-                mtObserver = new MassTransitObserver(_massTransitConfiguration, _serviceConfiguration);
+                mtObserver = new MassTransitObserver(_massTransitConfiguration, _serviceConfiguration, _loggerFactory.CreateLogger<MassTransitObserver>());
                 value.Subscribe(mtObserver);
             }
 
             if (value.Name == "Microsoft.EntityFrameworkCore" && _entityFrameworkCoreConfiguration.Enabled)
             {
-                efObserver = new EntityFrameworkCoreObserver(_entityFrameworkCoreConfiguration, _serviceConfiguration);
+                efObserver = new EntityFrameworkCoreObserver(_entityFrameworkCoreConfiguration, _serviceConfiguration, _loggerFactory.CreateLogger<EntityFrameworkCoreObserver>());
                 value.Subscribe(efObserver);
             }
 
             if (value.Name == "CustomTracking" && _customTrackingConfiguration.Enabled)
             {
-                ctObserver = new CustomTrackingObserver(_customTrackingConfiguration, _serviceConfiguration);
+                ctObserver = new CustomTrackingObserver(_customTrackingConfiguration, _serviceConfiguration, _loggerFactory.CreateLogger<CustomTrackingObserver>());
                 value.Subscribe(ctObserver);
             }
 
             if (value.Name == "HealthCheck" && _healthChecksMetricsConfiguration.Enabled)
             {
-                value.Subscribe(new HealthChecksObserver(_healthChecksMetricsConfiguration, _serviceConfiguration));
+                hcObserver = new HealthChecksObserver(_healthChecksMetricsConfiguration, _serviceConfiguration, _loggerFactory.CreateLogger<HealthChecksObserver>());
+                value.Subscribe(hcObserver);
             }
         }
     }

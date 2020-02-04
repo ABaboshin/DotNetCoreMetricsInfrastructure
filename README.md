@@ -74,12 +74,10 @@ In order to demonstrate how it works the following things were created:
 
 How to run the sample:
 ```
-# build a base image
-yarn baseimage
-# build the sample app
-yarn sampleappimage
-# build prometheus
-yarn prometheus
+# build the sample apps
+yarn images
+# build prometheus, grafana and ELK
+yarn infra
 # run the docker compose
 cd sample
 docker-compose up -d
@@ -94,14 +92,9 @@ It will create an app running on `http://localhost:5000` with the following endp
  - api/values/trackok -> tracks an successful activity
  - api/values/trackexception -> tracks an activity with an exception
 
-As long as `Microsoft.Extensions.Diagnostics.HealthChecks` are available for .net core 2.2+
-the healthcheck mocked here for the demonstration purposes.
-
 The metrics can be seen in statsd at `http://localhost:9102/metrics`.
 
 ## TBD
 
  - documentation
- - masstransit bus
- - masstransit endpoints
  - unit tests

@@ -1,5 +1,6 @@
 ﻿using Metrics.Configuration;
 using Metrics.Extensions;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -13,11 +14,13 @@ namespace Metrics.CustomTracking
     {
         private readonly CustomTrackingConfiguration _customTrackingConfiguration;
         private readonly ServiceConfiguration _serviceConfiguration;
+        private readonly ILogger<CustomTrackingObserver> _logger;
 
-        public CustomTrackingObserver(CustomTrackingConfiguration customTrackingConfiguration, ServiceConfiguration serviceConfiguration)
+        public CustomTrackingObserver(CustomTrackingConfiguration customTrackingConfiguration, ServiceConfiguration serviceConfiguration, ILogger<CustomTrackingObserver> logger)
         {
             _customTrackingConfiguration = customTrackingConfiguration;
             _serviceConfiguration = serviceConfiguration;
+            _logger = logger;
         }
 
         public void OnCompleted()
@@ -47,6 +50,16 @@ namespace Metrics.CustomTracking
                 if (exception != null)
                 {
                     tags.AddRange(exception.GetTags());
+                }
+
+                var msg = "CustomTrackingObserver {traceIdentifier} {activityName} {service} {success} {duration}";
+                if (exception != null)
+                {
+                    _logger.LogDebug(exception, msg, traceIdentifier, activityName, _serviceConfiguration.Name, exception is null, duration);
+                }
+                else
+                {
+                    _logger.LogDebug(msg, traceIdentifier, activityName, _serviceConfiguration.Name, exception is null);
                 }
 
                 StatsdClient.DogStatsd.Histogram(_customTrackingConfiguration.Name,

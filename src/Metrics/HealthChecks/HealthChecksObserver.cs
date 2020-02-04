@@ -1,5 +1,6 @@
 ﻿using Metrics.Configuration;
 using Metrics.Extensions;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -11,13 +12,15 @@ namespace Metrics.HealthChecks
     /// </summary>
     internal class HealthChecksObserver : IObserver<KeyValuePair<string, object>>
     {
-        private HealthChecksMetricsConfiguration _healthChecksMetricsConfiguration;
-        private ServiceConfiguration _serviceConfiguration;
+        private readonly HealthChecksMetricsConfiguration _healthChecksMetricsConfiguration;
+        private readonly ServiceConfiguration _serviceConfiguration;
+        private readonly ILogger<HealthChecksObserver> _logger;
 
-        public HealthChecksObserver(HealthChecksMetricsConfiguration healthChecksMetricsConfiguration, ServiceConfiguration serviceConfiguration)
+        public HealthChecksObserver(HealthChecksMetricsConfiguration healthChecksMetricsConfiguration, ServiceConfiguration serviceConfiguration, ILogger<HealthChecksObserver> logger)
         {
             _healthChecksMetricsConfiguration = healthChecksMetricsConfiguration;
             _serviceConfiguration = serviceConfiguration;
+            _logger = logger;
         }
 
         public void OnCompleted()
@@ -44,6 +47,16 @@ namespace Metrics.HealthChecks
                 if (exception != null)
                 {
                     tags.AddRange(exception.GetTags());
+                }
+
+                var msg = "HealthChecksObserver {dependency} {service} {healthy}";
+                if (exception != null)
+                {
+                    _logger.LogDebug(exception, msg, name, _serviceConfiguration.Name, healthy);
+                }
+                else
+                {
+                    _logger.LogDebug(msg, name, _serviceConfiguration.Name, healthy);
                 }
 
                 StatsdClient.DogStatsd.Histogram(_healthChecksMetricsConfiguration.Name,

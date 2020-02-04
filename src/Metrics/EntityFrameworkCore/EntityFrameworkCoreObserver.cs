@@ -1,6 +1,7 @@
 ﻿using Metrics.Configuration;
 using Metrics.Extensions;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,11 +16,13 @@ namespace Metrics.EntityFrameworkCore
         private readonly ConcurrentDictionary<Guid, CommandInfo> info = new ConcurrentDictionary<Guid, CommandInfo>();
         private readonly EntityFrameworkCoreConfiguration _entityFrameworkCoreConfiguration;
         private readonly ServiceConfiguration _serviceConfiguration;
+        private readonly ILogger<EntityFrameworkCoreObserver> _logger;
 
-        public EntityFrameworkCoreObserver(EntityFrameworkCoreConfiguration entityFrameworkCoreConfiguration, ServiceConfiguration serviceConfiguration)
+        public EntityFrameworkCoreObserver(EntityFrameworkCoreConfiguration entityFrameworkCoreConfiguration, ServiceConfiguration serviceConfiguration, ILogger<EntityFrameworkCoreObserver> logger)
         {
             _entityFrameworkCoreConfiguration = entityFrameworkCoreConfiguration;
             _serviceConfiguration = serviceConfiguration;
+            _logger = logger;
         }
 
         public void OnCompleted()
@@ -44,6 +47,9 @@ namespace Metrics.EntityFrameworkCore
                 if (info.TryRemove(commandExecutedEventData.CommandId, out var existing))
                 {
                     var duration = commandExecutedEventData.Duration.TotalMilliseconds;
+
+                    _logger.LogDebug("EntityFrameworkCoreObserver {commandText} {service} {duration} {success}", commandExecutedEventData.Command.CommandText, _serviceConfiguration.Name, duration, true);
+
                     StatsdClient.DogStatsd.Histogram(_entityFrameworkCoreConfiguration.Name,
                         duration,
                         tags: new[] {
@@ -66,6 +72,9 @@ namespace Metrics.EntityFrameworkCore
                         $"success:False"
                     };
                     tags.AddRange(commandErrorEventData.Exception.GetTags());
+
+                    _logger.LogDebug(commandErrorEventData.Exception, "EntityFrameworkCoreObserver {commandText} {service} {duration} {success}", commandErrorEventData.Command.CommandText, _serviceConfiguration.Name, duration, false);
+
                     StatsdClient.DogStatsd.Histogram(_entityFrameworkCoreConfiguration.Name,
                         duration,
                         tags: tags.ToArray());
