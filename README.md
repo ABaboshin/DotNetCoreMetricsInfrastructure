@@ -96,5 +96,6 @@ The metrics can be seen in statsd at `http://localhost:9102/metrics`.
 
 ## TBD
 
+ - https://galaxy.ansible.com/geerlingguy/kibana
  - documentation
  - unit tests
