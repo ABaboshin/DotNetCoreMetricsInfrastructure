@@ -95,7 +95,5 @@ It will create an app running on `http://localhost:5000` with the following endp
 The metrics can be seen in statsd at `http://localhost:9102/metrics`.
 
 ## TBD
-
- - https://galaxy.ansible.com/geerlingguy/kibana
  - documentation
  - unit tests
