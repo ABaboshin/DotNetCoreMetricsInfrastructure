@@ -5,7 +5,10 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("Metrics.UnitTests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 namespace Metrics.EntityFrameworkCore
 {
     /// <summary>
@@ -17,12 +20,14 @@ namespace Metrics.EntityFrameworkCore
         private readonly EntityFrameworkCoreConfiguration _entityFrameworkCoreConfiguration;
         private readonly ServiceConfiguration _serviceConfiguration;
         private readonly ILogger<EntityFrameworkCoreObserver> _logger;
+        private readonly IMetricsSender _metricsSender;
 
-        public EntityFrameworkCoreObserver(EntityFrameworkCoreConfiguration entityFrameworkCoreConfiguration, ServiceConfiguration serviceConfiguration, ILogger<EntityFrameworkCoreObserver> logger)
+        public EntityFrameworkCoreObserver(EntityFrameworkCoreConfiguration entityFrameworkCoreConfiguration, ServiceConfiguration serviceConfiguration, ILogger<EntityFrameworkCoreObserver> logger, IMetricsSender metricsSender)
         {
             _entityFrameworkCoreConfiguration = entityFrameworkCoreConfiguration;
             _serviceConfiguration = serviceConfiguration;
             _logger = logger;
+            _metricsSender = metricsSender;
         }
 
         public void OnCompleted()
@@ -50,7 +55,7 @@ namespace Metrics.EntityFrameworkCore
 
                     _logger.LogDebug("EntityFrameworkCoreObserver {commandText} {service} {duration} {success}", commandExecutedEventData.Command.CommandText, _serviceConfiguration.Name, duration, true);
 
-                    StatsdClient.DogStatsd.Histogram(_entityFrameworkCoreConfiguration.Name,
+                    _metricsSender.Histogram(_entityFrameworkCoreConfiguration.Name,
                         duration,
                         tags: new[] {
                             $"commandText:{commandExecutedEventData.Command.CommandText.EscapeTagValue()}",
@@ -69,13 +74,13 @@ namespace Metrics.EntityFrameworkCore
                     var tags = new List<string> {
                         $"commandText:{commandErrorEventData.Command.CommandText.EscapeTagValue()}",
                         $"service:{_serviceConfiguration.Name}",
-                        $"success:False"
+                        "success:False"
                     };
                     tags.AddRange(commandErrorEventData.Exception.GetTags());
 
                     _logger.LogDebug(commandErrorEventData.Exception, "EntityFrameworkCoreObserver {commandText} {service} {duration} {success}", commandErrorEventData.Command.CommandText, _serviceConfiguration.Name, duration, false);
 
-                    StatsdClient.DogStatsd.Histogram(_entityFrameworkCoreConfiguration.Name,
+                    _metricsSender.Histogram(_entityFrameworkCoreConfiguration.Name,
                         duration,
                         tags: tags.ToArray());
                 }

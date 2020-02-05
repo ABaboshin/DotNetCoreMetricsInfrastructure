@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using StatsdClient;
 using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Metrics
 {
@@ -20,19 +21,26 @@ namespace Metrics
     /// </summary>
     internal class DiagnosticsObserver : IObserver<DiagnosticListener>
     {
+        #region configuration
         private readonly HttpConfiguration _httpConfiguration;
         private readonly MassTransitConfiguration _massTransitConfiguration;
         private readonly EntityFrameworkCoreConfiguration _entityFrameworkCoreConfiguration;
         private readonly CustomTrackingConfiguration _customTrackingConfiguration;
         private readonly ServiceConfiguration _serviceConfiguration;
         private readonly HealthChecksMetricsConfiguration _healthChecksMetricsConfiguration;
+        #endregion
+
+        private readonly IMetricsSender _metricsSender;
+        
         private readonly ILoggerFactory _loggerFactory;
 
+        #region observers
         private HttpObserver httpObserver;
         private MassTransitObserver mtObserver;
         private EntityFrameworkCoreObserver efObserver;
         private CustomTrackingObserver ctObserver;
         private HealthChecksObserver hcObserver;
+        #endregion
 
         public DiagnosticsObserver(
             StatsdConfiguration statsdConfiguration,
@@ -42,6 +50,7 @@ namespace Metrics
             CustomTrackingConfiguration customTrackingConfiguration,
             ServiceConfiguration serviceConfiguration,
             HealthChecksMetricsConfiguration healthChecksMetricsConfiguration,
+            IMetricsSender metricsSender,
             ILoggerFactory loggerFactory)
         {
             ConfigureStatsd(statsdConfiguration);
@@ -52,6 +61,7 @@ namespace Metrics
             _customTrackingConfiguration = customTrackingConfiguration;
             _serviceConfiguration = serviceConfiguration;
             _healthChecksMetricsConfiguration = healthChecksMetricsConfiguration;
+            _metricsSender = metricsSender;
             _loggerFactory = loggerFactory;
         }
 
@@ -88,7 +98,12 @@ namespace Metrics
 
             if (value.Name == "Microsoft.EntityFrameworkCore" && _entityFrameworkCoreConfiguration.Enabled)
             {
-                efObserver = new EntityFrameworkCoreObserver(_entityFrameworkCoreConfiguration, _serviceConfiguration, _loggerFactory.CreateLogger<EntityFrameworkCoreObserver>());
+                efObserver = new EntityFrameworkCoreObserver(
+                    _entityFrameworkCoreConfiguration,
+                    _serviceConfiguration,
+                    _loggerFactory.CreateLogger<EntityFrameworkCoreObserver>(),
+                    _metricsSender
+                    );
                 value.Subscribe(efObserver);
             }
 

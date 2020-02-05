@@ -71,6 +71,7 @@ namespace Metrics
                     customTrackingConfiguration,
                     serviceConfiguration,
                     healthChecksMetricsConfiguration,
+                    new StatsdMetricsSender(),
                     loggerFactory));
             });
         }
