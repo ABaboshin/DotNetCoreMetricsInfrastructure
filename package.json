@@ -19,7 +19,8 @@
     "grafana": "docker build --no-cache -t grafana:local -f grafana/Dockerfile grafana",
     "logstash": "docker build --no-cache -t logstash:local -f logstash/Dockerfile logstash",
     "elasticsearch": "docker build --no-cache -t elasticsearch:local -f elasticsearch/Dockerfile elasticsearch",
-    "infra": "yarn prometheus && yarn grafana && yarn logstash && yarn elasticsearch",
+    "kibana": "docker build --no-cache -t kibana:local -f kibana/Dockerfile kibana",
+    "infra": "yarn prometheus && yarn grafana && yarn logstash && yarn elasticsearch && yarn kibana",
     "images": "yarn baseimage && yarn sampleappimage && yarn sampleapp2image"
   }
 }

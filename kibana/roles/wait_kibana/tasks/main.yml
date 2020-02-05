@@ -1,0 +1,14 @@
+- name: "wait for kibana to come up"
+  uri:
+    url: "http://127.0.0.1:5601/status"
+    status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 100
+  delay: 15
+
+- name: print to stdout
+  command: echo "kibana is up and running"
+  register: hello
+
+- debug: msg="{{ hello.stdout }}"

@@ -1,0 +1,13 @@
+- name: read dashboard
+  set_fact:
+    json: "{{ lookup('file',item) }}"
+
+- name: "Import kibana's dashboard "
+  uri:
+    url: "http://127.0.0.1:5601/api/kibana/dashboards/import?force=true"
+    method: POST
+    body: "{{ json }}"
+    body_format: json
+    headers:
+      Content-Type: "application/json; charset=utf-8"
+      Kbn-xsrf: kibana

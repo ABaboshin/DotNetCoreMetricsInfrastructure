@@ -91,7 +91,7 @@ services:
       - "3000:3000"
 
   kibana:
-    image: kibana:7.5.2
+    image: kibana:local
     ports:
       - "5601:5601"
 

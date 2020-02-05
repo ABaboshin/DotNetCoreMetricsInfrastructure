@@ -1,0 +1,13 @@
+- hosts: localhost
+  connection: local
+  gather_facts: true
+  serial: 1
+  roles:
+    - role: wait_kibana
+
+  tasks:
+    - name: display dashboards
+      include_role:
+        name: install_dashboards
+      loop: "{{ lookup('fileglob', './dashboards/*.json', wantlist=True) }}"
+
