@@ -4,7 +4,10 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("Metrics.UnitTests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 namespace Metrics.CustomTracking
 {
     /// <summary>
@@ -15,12 +18,14 @@ namespace Metrics.CustomTracking
         private readonly CustomTrackingConfiguration _customTrackingConfiguration;
         private readonly ServiceConfiguration _serviceConfiguration;
         private readonly ILogger<CustomTrackingObserver> _logger;
+        private readonly IMetricsSender _metricsSender;
 
-        public CustomTrackingObserver(CustomTrackingConfiguration customTrackingConfiguration, ServiceConfiguration serviceConfiguration, ILogger<CustomTrackingObserver> logger)
+        public CustomTrackingObserver(CustomTrackingConfiguration customTrackingConfiguration, ServiceConfiguration serviceConfiguration, ILogger<CustomTrackingObserver> logger, IMetricsSender metricsSender)
         {
             _customTrackingConfiguration = customTrackingConfiguration;
             _serviceConfiguration = serviceConfiguration;
             _logger = logger;
+            _metricsSender = metricsSender;
         }
 
         public void OnCompleted()
@@ -62,7 +67,7 @@ namespace Metrics.CustomTracking
                     _logger.LogDebug(msg, traceIdentifier, activityName, _serviceConfiguration.Name, exception is null);
                 }
 
-                StatsdClient.DogStatsd.Histogram(_customTrackingConfiguration.Name,
+                _metricsSender.Histogram(_customTrackingConfiguration.Name,
                         duration,
                         tags: tags.ToArray());
             }

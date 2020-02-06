@@ -17,7 +17,7 @@ namespace Metrics.Extensions
         {
             return new[] {
                 $"exceptionType:{exception.GetType().FullName}",
-                $"exceptionStackTrace:{exception.StackTrace.EscapeTagValue()}",
+                $"exceptionStackTrace:{exception.StackTrace?.EscapeTagValue()}",
                 $"exceptionMessage:{exception.Message.EscapeTagValue()}"
             };
         }

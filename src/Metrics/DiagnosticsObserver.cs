@@ -109,7 +109,11 @@ namespace Metrics
 
             if (value.Name == "CustomTracking" && _customTrackingConfiguration.Enabled)
             {
-                ctObserver = new CustomTrackingObserver(_customTrackingConfiguration, _serviceConfiguration, _loggerFactory.CreateLogger<CustomTrackingObserver>());
+                ctObserver = new CustomTrackingObserver(
+                    _customTrackingConfiguration,
+                    _serviceConfiguration,
+                    _loggerFactory.CreateLogger<CustomTrackingObserver>(),
+                    _metricsSender);
                 value.Subscribe(ctObserver);
             }
 
