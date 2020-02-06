@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1580431935491,
+  "iteration": 1581018797132,
   "links": [],
   "panels": [
     {
@@ -62,7 +62,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "min(samplehc{dependency=~\"$dependencies\",service=~\"$services\"}) by(service,dependency) < 1",
+          "expr": "min(samplehc{dependency=~\"$dependencies\",service=~\"$services\"}) by(service,dependency) <= 0",
           "legendFormat": "{{service}} - {{dependency}}",
           "refId": "A"
         }
@@ -80,7 +80,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "HealthCheck",
+      "title": "Unhealthy services",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -141,38 +141,6 @@
           "dateFormat": "YYYY-MM-DD HH:mm:ss",
           "pattern": "Time",
           "type": "date"
-        },
-        {
-          "alias": "",
-          "colorMode": null,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "mappingType": 1,
-          "pattern": "action",
-          "thresholds": [],
-          "type": "string",
-          "unit": "short"
-        },
-        {
-          "alias": "",
-          "colorMode": null,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "mappingType": 1,
-          "pattern": "controller",
-          "thresholds": [],
-          "type": "string",
-          "unit": "short"
         },
         {
           "alias": "",
@@ -329,7 +297,7 @@
         {
           "expr": "samplehttp{service=~\"$services\",statusCode!=\"200\",quantile=\"0.99\"}",
           "format": "table",
-          "instant": false,
+          "instant": true,
           "refId": "A"
         }
       ],
@@ -960,7 +928,6 @@
       {
         "allValue": null,
         "current": {
-          "tags": [],
           "text": "All",
           "value": [
             "$__all"
@@ -1035,5 +1002,5 @@
   "timezone": "",
   "title": "SampleDashboard",
   "uid": "ui799SyZz",
-  "version": 2
+  "version": 5
 }
