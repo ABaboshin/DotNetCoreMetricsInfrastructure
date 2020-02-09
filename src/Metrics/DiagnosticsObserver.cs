@@ -96,7 +96,11 @@ namespace Metrics
 
             if (value.Name == "MetricMassTransit" && _massTransitConfiguration.Enabled)
             {
-                mtObserver = new MassTransitObserver(_massTransitConfiguration, _serviceConfiguration, _loggerFactory.CreateLogger<MassTransitObserver>());
+                mtObserver = new MassTransitObserver(
+                    _massTransitConfiguration,
+                    _serviceConfiguration,
+                    _loggerFactory.CreateLogger<MassTransitObserver>(),
+                    _metricsSender);
                 value.Subscribe(mtObserver);
             }
 

@@ -18,12 +18,14 @@ namespace Metrics.MassTransit
         private readonly MassTransitConfiguration _massTransitConfiguration;
         private readonly ServiceConfiguration _serviceConfiguration;
         private readonly ILogger<MassTransitObserver> _logger;
+        private readonly IMetricsSender _metricsSender;
 
-        public MassTransitObserver(MassTransitConfiguration massTransitConfiguration, ServiceConfiguration serviceConfiguration, ILogger<MassTransitObserver> logger)
+        public MassTransitObserver(MassTransitConfiguration massTransitConfiguration, ServiceConfiguration serviceConfiguration, ILogger<MassTransitObserver> logger, IMetricsSender metricsSender)
         {
             _massTransitConfiguration = massTransitConfiguration;
             _serviceConfiguration = serviceConfiguration;
             _logger = logger;
+            _metricsSender = metricsSender;
         }
 
         public void OnCompleted()
@@ -120,7 +122,7 @@ namespace Metrics.MassTransit
                         _logger.LogDebug(msg, existing.MessageType, existing.MessageId, success, _serviceConfiguration.Name);
                     }
 
-                    StatsdClient.DogStatsd.Histogram(_massTransitConfiguration.Name,
+                    _metricsSender.Histogram(_massTransitConfiguration.Name,
                         (end - existing.Start).TotalMilliseconds,
                         tags: tags.ToArray());
                 }
