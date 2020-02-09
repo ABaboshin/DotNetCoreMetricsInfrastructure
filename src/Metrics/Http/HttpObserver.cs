@@ -7,7 +7,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("Metrics.UnitTests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 namespace Metrics.Http
 {
     /// <summary>
@@ -19,12 +22,14 @@ namespace Metrics.Http
         private readonly HttpConfiguration _httpConfiguration;
         private readonly ServiceConfiguration _serviceConfiguration;
         private readonly ILogger<HttpObserver> _logger;
+        private readonly IMetricsSender _metricsSender;
 
-        public HttpObserver(HttpConfiguration httpConfiguration, ServiceConfiguration serviceConfiguration, ILogger<HttpObserver> logger)
+        public HttpObserver(HttpConfiguration httpConfiguration, ServiceConfiguration serviceConfiguration, ILogger<HttpObserver> logger, IMetricsSender metricsSender)
         {
             _httpConfiguration = httpConfiguration;
             _serviceConfiguration = serviceConfiguration;
             _logger = logger;
+            _metricsSender = metricsSender;
         }
 
         public void OnCompleted()
@@ -121,7 +126,7 @@ namespace Metrics.Http
                         _logger.LogDebug(msg, existing.ActionName ?? "", existing.ControllerName ?? "", httpContext.Response.StatusCode, traceIdentifier, _serviceConfiguration.Name);
                     }
 
-                    StatsdClient.DogStatsd.Histogram(_httpConfiguration.Name,
+                    _metricsSender.Histogram(_httpConfiguration.Name,
                         (end - existing.Start).TotalMilliseconds,
                         tags: tags.ToArray());
                 }

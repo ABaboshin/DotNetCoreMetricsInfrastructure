@@ -86,7 +86,11 @@ namespace Metrics
         {
             if (value.Name == "Microsoft.AspNetCore" && _httpConfiguration.Enabled)
             {
-                httpObserver = new HttpObserver(_httpConfiguration, _serviceConfiguration, _loggerFactory.CreateLogger< HttpObserver>());
+                httpObserver = new HttpObserver(
+                    _httpConfiguration,
+                    _serviceConfiguration,
+                    _loggerFactory.CreateLogger<HttpObserver>(),
+                    _metricsSender);
                 value.Subscribe(httpObserver);
             }
 
