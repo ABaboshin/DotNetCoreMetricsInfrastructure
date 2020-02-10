@@ -38,9 +38,6 @@ namespace Metrics.Extensions.MassTransit
 
             _source.Write("hc", new { name = ready.InputAddress.ToString(), healthy = true });
 
-            _source.Write("hc", new { name = "rabbitmq://rabbitmq/queue-name", healthy = true });
-            _source.Write("hc", new { name = "rabbitmq://rabbitmq/queue_name", healthy = true });
-
             return Task.CompletedTask;
         }
 

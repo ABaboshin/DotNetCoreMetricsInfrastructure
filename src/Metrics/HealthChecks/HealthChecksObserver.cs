@@ -15,12 +15,14 @@ namespace Metrics.HealthChecks
         private readonly HealthChecksMetricsConfiguration _healthChecksMetricsConfiguration;
         private readonly ServiceConfiguration _serviceConfiguration;
         private readonly ILogger<HealthChecksObserver> _logger;
+        private readonly IMetricsSender _metricsSender;
 
-        public HealthChecksObserver(HealthChecksMetricsConfiguration healthChecksMetricsConfiguration, ServiceConfiguration serviceConfiguration, ILogger<HealthChecksObserver> logger)
+        public HealthChecksObserver(HealthChecksMetricsConfiguration healthChecksMetricsConfiguration, ServiceConfiguration serviceConfiguration, ILogger<HealthChecksObserver> logger, IMetricsSender metricsSender)
         {
             _healthChecksMetricsConfiguration = healthChecksMetricsConfiguration;
             _serviceConfiguration = serviceConfiguration;
             _logger = logger;
+            _metricsSender = metricsSender;
         }
 
         public void OnCompleted()
@@ -41,7 +43,8 @@ namespace Metrics.HealthChecks
 
                 var tags = new List<string> {
                             $"dependency:{name}",
-                            $"service:{_serviceConfiguration.Name}"
+                            $"service:{_serviceConfiguration.Name}",
+                            $"success:{healthy}"
                         };
 
                 if (exception != null)
@@ -59,7 +62,7 @@ namespace Metrics.HealthChecks
                     _logger.LogDebug(msg, name, _serviceConfiguration.Name, healthy);
                 }
 
-                StatsdClient.DogStatsd.Histogram(_healthChecksMetricsConfiguration.Name,
+                _metricsSender.Histogram(_healthChecksMetricsConfiguration.Name,
                         healthy ? 1 : 0,
                         tags: tags.ToArray());
             }

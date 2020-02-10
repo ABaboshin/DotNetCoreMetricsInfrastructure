@@ -127,7 +127,11 @@ namespace Metrics
 
             if (value.Name == "HealthCheck" && _healthChecksMetricsConfiguration.Enabled)
             {
-                hcObserver = new HealthChecksObserver(_healthChecksMetricsConfiguration, _serviceConfiguration, _loggerFactory.CreateLogger<HealthChecksObserver>());
+                hcObserver = new HealthChecksObserver(
+                    _healthChecksMetricsConfiguration,
+                    _serviceConfiguration,
+                    _loggerFactory.CreateLogger<HealthChecksObserver>(),
+                    _metricsSender);
                 value.Subscribe(hcObserver);
             }
         }

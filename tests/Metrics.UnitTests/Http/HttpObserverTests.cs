@@ -37,11 +37,10 @@ namespace Metrics.UnitTests.Http
 
             _testObserver = new TestObserver("Microsoft.AspNetCore", _httpObserver);
 
+            DiagnosticListener.AllListeners.Subscribe(_testObserver);
+
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>()
-                .ConfigureServices(services => {
-                    DiagnosticListener.AllListeners.Subscribe(_testObserver);
-                });
+                .UseStartup<Startup>();
 
             _testServer = new TestServer(builder);
         }
