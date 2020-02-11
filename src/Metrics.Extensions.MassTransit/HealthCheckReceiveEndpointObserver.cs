@@ -41,6 +41,18 @@ namespace Metrics.Extensions.MassTransit
             return Task.CompletedTask;
         }
 
+        public Task Stopping(ReceiveEndpointStopping stopping)
+        {
+            var endpoint = GetEndpoint(stopping.InputAddress);
+
+            endpoint.Ready = false;
+            endpoint.LastException = null;
+
+            _source.Write("hc", new { name = stopping.InputAddress.ToString(), healthy = false });
+
+            return Task.CompletedTask;
+        }
+
         EndpointStatus GetEndpoint(Uri inputAddress)
         {
             if (!_endpoints.ContainsKey(inputAddress))

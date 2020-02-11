@@ -44,7 +44,7 @@ namespace Metrics
 
                 if (healthChecksConfiguration.RabbitMQ.Enabled)
                 {
-                    healthCheckBuilder.AddRabbitMQ(healthChecksConfiguration.RabbitMQ.ConnectionString);
+                    healthCheckBuilder.AddRabbitMQ(healthChecksConfiguration.RabbitMQ.ConnectionString, sslOption: null, "rabbitmq");
                 }
 
                 if (healthChecksConfiguration.Urls.Enabled)

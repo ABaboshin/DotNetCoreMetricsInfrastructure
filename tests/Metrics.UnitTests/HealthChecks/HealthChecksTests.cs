@@ -84,7 +84,13 @@ namespace Metrics.UnitTests.HealthChecks
 
             var calls = _metricsSender.ReceivedCalls();
 
-            calls.Count().Should().Be(1);
+            calls.Count().Should().Be(2);
+
+            foreach (var call in calls)
+            {
+                call.GetArguments().Count().Should().Be(4);
+                call.GetArguments()[0].ToString().Should().Be(HealthChecksMetricsName);
+            }
 
             var arguments = calls.First().GetArguments();
             arguments.Count().Should().Be(4);

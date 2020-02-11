@@ -62,7 +62,7 @@ namespace Metrics.UnitTests.EfCore
         {
             try
             {
-                await _dbContext.Database.ExecuteSqlCommandAsync("SELECT * FROM FakeTable");
+                await _dbContext.Database.ExecuteSqlRawAsync("SELECT * FROM FakeTable");
             }
             catch
             {
@@ -77,7 +77,7 @@ namespace Metrics.UnitTests.EfCore
         [Fact]
         public async Task It_should_capture_an_ok()
         {
-            await _dbContext.Database.ExecuteSqlCommandAsync("SELECT 1");
+            await _dbContext.Database.ExecuteSqlRawAsync("SELECT 1");
 
             _metricsSender
                 .Received()

@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,7 +31,7 @@ namespace Metrics.HealthChecks
                 
                 try
                 {
-                    obj = (dynamic)(object)JsonConvert.DeserializeObject(body);
+                    obj = (dynamic)JsonSerializer.Deserialize(body, typeof(object));
                     obj.url = _url;
                 }
                 catch (Exception)

@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Metrics.Extensions.MassTransit</PackageId>
     <AssemblyName>Metrics.Extensions.MassTransit</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MassTransit" Version="5.5.6" />
+    <PackageReference Include="MassTransit" Version="6.0.2" />
   </ItemGroup>
   
 

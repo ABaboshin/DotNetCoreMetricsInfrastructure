@@ -4,12 +4,11 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Mime;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Metrics.HealthChecks
@@ -68,14 +67,10 @@ namespace Metrics.HealthChecks
                     e.Value.Exception
                 })
             };
-            
-            var json = JsonConvert.SerializeObject
+
+            var json = JsonSerializer.Serialize
             (
-                value: data,
-                settings: new JsonSerializerSettings()
-                {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-                }
+                value: data
             );
 
             return httpContext.Response.WriteAsync(json);
